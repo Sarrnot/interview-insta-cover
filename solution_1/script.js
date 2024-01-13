@@ -14,13 +14,27 @@ const itemTemplate = ({ title, episodeNumber, imageSrc }) => `
 const response = await fetch(DATA_URL);
 const json = await response.json();
 
-const parsedData = json.movies.map((data) => ({
-    title: data.title,
-    episodeNumber: data.episode_number,
-    imageSrc: `${IMAGE_DIRECTORY_URL}/${data.poster}`,
-}));
+const sortByEpisode = (a, b) => a.episodeNumber > b.episodeNumber;
 
-const listElement = document.createElement("ul");
-listElement.classList.add("movie");
-listElement.innerHTML = parsedData.map((item) => itemTemplate(item)).join("");
-document.body.append(listElement);
+const parsedData = json.movies
+    .map((data) => ({
+        title: data.title,
+        episodeNumber: data.episode_number,
+        imageSrc: `${IMAGE_DIRECTORY_URL}/${data.poster}`,
+    }))
+    .sort(sortByEpisode);
+
+const listElement = document.querySelector(".js-list");
+
+const render = () =>
+    (listElement.innerHTML = parsedData
+        .map((item) => itemTemplate(item))
+        .join(""));
+
+render();
+
+const sortButton = document.querySelector(".js-sort");
+sortButton.addEventListener("click", () => {
+    parsedData.reverse();
+    render();
+});
