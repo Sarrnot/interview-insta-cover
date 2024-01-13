@@ -32,6 +32,10 @@ const MovieList = () => {
         return <>Something went wrong</>;
     }
 
+    if (movies.length === 0) {
+        return <>No movies found</>;
+    }
+
     const toggleSortDirection = () =>
         setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
 
